@@ -1,21 +1,14 @@
 module GildedRose
-  attr_reader :item
+  
+  DEFAULT_CLASS = Item
+  SPECIALIZED_CLASSES = {
+    'normal' => Normal,
+    'Aged Brie' => Brie,
+    'Backstage passes to a TAFKAL80ETC concert' => Backstage }
 
   def self.for(name, days_remaining, quality)
-    @item = klass_for(name).new(quality, days_remaining)
-  end
-
-  def self.klass_for(name)
-    case name
-    when "normal"
-      Normal
-    when 'Aged Brie'
-      Brie
-    when 'Sulfuras, Hand of Ragnaros'
-      Sulfuras
-    when 'Backstage passes to a TAFKAL80ETC concert'
-      Backstage
-    end
+    (SPECIALIZED_CLASSES[name] || DEFAULT_CLASS).
+      new(quality, days_remaining)
   end
 
   class Item
@@ -24,6 +17,9 @@ module GildedRose
     def initialize(quality, days_remaining)
       @quality, @days_remaining = quality, days_remaining
     end
+    def tick
+    end
+  end
 
   class Normal < Item
     def tick
@@ -42,11 +38,6 @@ module GildedRose
         
         @quality += 1
         @quality += 1 if @days_remaining <= 0
-    end
-  end
-
-  class Sulfuras < Item
-    def tick
     end
   end
 
